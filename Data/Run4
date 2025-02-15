@@ -1,0 +1,464 @@
+# Num_Runs = 10
+
+Instance with 3 ships (and 3 time slots):
+  Optimized total water cost = 119.0
+  Baseline total water cost   = 140
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 0
+  Cross fills applied: 1
+  Length of ships: [56, 56, 32]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [1]
+  Time slot 1 (Lock type: Panamax_B): Ships [3]
+  Time slot 2 (Lock type: NeoPanamax): Ships [2]
+
+--------------------------------------------------
+
+Instance with 5 ships (and 5 time slots):
+  Optimized total water cost = 208.0
+  Baseline total water cost   = 250
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 0
+  Cross fills applied: 2
+  Length of ships: [53, 43, 55, 36, 30]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [4]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [3]
+  Time slot 3 (Lock type: NeoPanamax): Ships [1]
+  Time slot 4 (Lock type: NeoPanamax): Ships [5]
+
+--------------------------------------------------
+
+Instance with 7 ships (and 7 time slots):
+  Optimized total water cost = 297.0
+  Baseline total water cost   = 360
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 0
+  Cross fills applied: 3
+  Length of ships: [60, 45, 44, 40, 60, 37, 51]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [5]
+  Time slot 1 (Lock type: Panamax_B): Ships [7]
+  Time slot 2 (Lock type: Panamax_A): Ships [6]
+  Time slot 3 (Lock type: Panamax_B): Ships [3]
+  Time slot 4 (Lock type: NeoPanamax): Ships [4]
+  Time slot 5 (Lock type: NeoPanamax): Ships [1]
+  Time slot 6 (Lock type: NeoPanamax): Ships [2]
+
+--------------------------------------------------
+
+Instance with 9 ships (and 9 time slots):
+  Optimized total water cost = 315.0
+  Baseline total water cost   = 420
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 0
+  Cross fills applied: 5
+  Length of ships: [42, 41, 50, 47, 58, 54, 31, 51, 27]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [5]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [8]
+  Time slot 3 (Lock type: Panamax_B): Ships [3]
+  Time slot 4 (Lock type: Panamax_A): Ships [6]
+  Time slot 5 (Lock type: Panamax_B): Ships [4]
+  Time slot 6 (Lock type: NeoPanamax): Ships [9]
+  Time slot 7 (Lock type: NeoPanamax): Ships [1]
+  Time slot 8 (Lock type: NeoPanamax): Ships [7]
+
+--------------------------------------------------
+
+Instance with 11 ships (and 11 time slots):
+  Optimized total water cost = 324.0
+  Baseline total water cost   = 530
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 1
+  Cross fills applied: 6
+  Length of ships: [33, 58, 42, 59, 32, 33, 49, 34, 34, 42, 36]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [7]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [10]
+  Time slot 3 (Lock type: Panamax_B): Ships [3]
+  Time slot 4 (Lock type: Panamax_A): Ships [11]
+  Time slot 5 (Lock type: Panamax_B): Ships [4]
+  Time slot 6 (Lock type: Panamax_A): Ships [5]
+  Time slot 7 (Lock type: NeoPanamax): Ships []
+  Time slot 8 (Lock type: NeoPanamax): Ships [8]
+  Time slot 9 (Lock type: NeoPanamax): Ships [9]
+  Time slot 10 (Lock type: NeoPanamax): Ships [1, 6]
+
+--------------------------------------------------
+
+Instance with 13 ships (and 13 time slots):
+  Optimized total water cost = 422.0
+  Baseline total water cost   = 590
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 0
+  Cross fills applied: 8
+  Length of ships: [48, 42, 57, 45, 50, 43, 51, 42, 47, 56, 51, 48, 50]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [10]
+  Time slot 1 (Lock type: Panamax_B): Ships [5]
+  Time slot 2 (Lock type: Panamax_A): Ships [12]
+  Time slot 3 (Lock type: Panamax_B): Ships [3]
+  Time slot 4 (Lock type: Panamax_A): Ships [4]
+  Time slot 5 (Lock type: Panamax_B): Ships [13]
+  Time slot 6 (Lock type: Panamax_A): Ships [9]
+  Time slot 7 (Lock type: Panamax_B): Ships [8]
+  Time slot 8 (Lock type: Panamax_A): Ships [11]
+  Time slot 9 (Lock type: NeoPanamax): Ships [6]
+  Time slot 10 (Lock type: NeoPanamax): Ships [7]
+  Time slot 11 (Lock type: NeoPanamax): Ships [1]
+  Time slot 12 (Lock type: NeoPanamax): Ships [2]
+
+--------------------------------------------------
+
+Instance with 15 ships (and 15 time slots):
+  Optimized total water cost = 511.0
+  Baseline total water cost   = 700
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 0
+  Cross fills applied: 9
+  Length of ships: [39, 29, 57, 37, 34, 56, 43, 60, 29, 58, 60, 51, 54, 47, 33]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [3]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [6]
+  Time slot 3 (Lock type: Panamax_B): Ships [14]
+  Time slot 4 (Lock type: Panamax_A): Ships [4]
+  Time slot 5 (Lock type: Panamax_B): Ships [8]
+  Time slot 6 (Lock type: Panamax_A): Ships [11]
+  Time slot 7 (Lock type: Panamax_B): Ships [7]
+  Time slot 8 (Lock type: Panamax_A): Ships [5]
+  Time slot 9 (Lock type: Panamax_B): Ships [12]
+  Time slot 10 (Lock type: NeoPanamax): Ships [13]
+  Time slot 11 (Lock type: NeoPanamax): Ships [9]
+  Time slot 12 (Lock type: NeoPanamax): Ships [15]
+  Time slot 13 (Lock type: NeoPanamax): Ships [10]
+  Time slot 14 (Lock type: NeoPanamax): Ships [1]
+
+--------------------------------------------------
+
+Instance with 17 ships (and 17 time slots):
+  Optimized total water cost = 520.0
+  Baseline total water cost   = 810
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 1
+  Cross fills applied: 10
+  Length of ships: [52, 34, 60, 60, 46, 34, 50, 32, 36, 46, 48, 46, 28, 60, 33, 28, 34]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [17]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [16]
+  Time slot 3 (Lock type: Panamax_B): Ships [3]
+  Time slot 4 (Lock type: Panamax_A): Ships [15]
+  Time slot 5 (Lock type: Panamax_B): Ships [4]
+  Time slot 6 (Lock type: Panamax_A): Ships [1]
+  Time slot 7 (Lock type: Panamax_B): Ships [5]
+  Time slot 8 (Lock type: Panamax_A): Ships [14]
+  Time slot 9 (Lock type: Panamax_B): Ships [7]
+  Time slot 10 (Lock type: Panamax_A): Ships [11]
+  Time slot 11 (Lock type: NeoPanamax): Ships [6, 13]
+  Time slot 12 (Lock type: NeoPanamax): Ships [9]
+  Time slot 13 (Lock type: NeoPanamax): Ships [8]
+  Time slot 14 (Lock type: NeoPanamax): Ships [10]
+  Time slot 15 (Lock type: NeoPanamax): Ships []
+  Time slot 16 (Lock type: NeoPanamax): Ships [12]
+
+--------------------------------------------------
+
+Instance with 19 ships (and 19 time slots):
+  Optimized total water cost = 550.0
+  Baseline total water cost   = 870
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 2
+  Cross fills applied: 11
+  Length of ships: [57, 39, 28, 42, 50, 25, 57, 42, 41, 37, 47, 55, 60, 59, 36, 49, 47, 41, 60]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [1]
+  Time slot 1 (Lock type: Panamax_B): Ships [18]
+  Time slot 2 (Lock type: Panamax_A): Ships [2]
+  Time slot 3 (Lock type: Panamax_B): Ships [11]
+  Time slot 4 (Lock type: Panamax_A): Ships [14]
+  Time slot 5 (Lock type: Panamax_B): Ships [19]
+  Time slot 6 (Lock type: Panamax_A): Ships [4]
+  Time slot 7 (Lock type: Panamax_B): Ships [13]
+  Time slot 8 (Lock type: Panamax_A): Ships [5]
+  Time slot 9 (Lock type: Panamax_B): Ships []
+  Time slot 10 (Lock type: Panamax_A): Ships [15]
+  Time slot 11 (Lock type: Panamax_B): Ships [10]
+  Time slot 12 (Lock type: Panamax_A): Ships [7]
+  Time slot 13 (Lock type: NeoPanamax): Ships [6, 9]
+  Time slot 14 (Lock type: NeoPanamax): Ships [3, 8]
+  Time slot 15 (Lock type: NeoPanamax): Ships [12]
+  Time slot 16 (Lock type: NeoPanamax): Ships []
+  Time slot 17 (Lock type: NeoPanamax): Ships [17]
+  Time slot 18 (Lock type: NeoPanamax): Ships [16]
+
+--------------------------------------------------
+
+Instance with 21 ships (and 21 time slots):
+  Optimized total water cost = 618.0
+  Baseline total water cost   = 980
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 2
+  Cross fills applied: 13
+  Length of ships: [46, 40, 39, 40, 28, 50, 30, 26, 43, 27, 35, 40, 35, 59, 51, 45, 49, 46, 31, 49, 37]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [20]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [19]
+  Time slot 3 (Lock type: Panamax_B): Ships [21]
+  Time slot 4 (Lock type: Panamax_A): Ships [15]
+  Time slot 5 (Lock type: Panamax_B): Ships [4]
+  Time slot 6 (Lock type: Panamax_A): Ships [3]
+  Time slot 7 (Lock type: Panamax_B): Ships [5, 10]
+  Time slot 8 (Lock type: Panamax_A): Ships [14]
+  Time slot 9 (Lock type: Panamax_B): Ships [17]
+  Time slot 10 (Lock type: Panamax_A): Ships [7]
+  Time slot 11 (Lock type: Panamax_B): Ships [6]
+  Time slot 12 (Lock type: Panamax_A): Ships [18]
+  Time slot 13 (Lock type: Panamax_B): Ships []
+  Time slot 14 (Lock type: NeoPanamax): Ships []
+  Time slot 15 (Lock type: NeoPanamax): Ships [8, 12]
+  Time slot 16 (Lock type: NeoPanamax): Ships [11]
+  Time slot 17 (Lock type: NeoPanamax): Ships [13]
+  Time slot 18 (Lock type: NeoPanamax): Ships [9]
+  Time slot 19 (Lock type: NeoPanamax): Ships [16]
+  Time slot 20 (Lock type: NeoPanamax): Ships [1]
+
+--------------------------------------------------
+
+Instance with 23 ships (and 23 time slots):
+  Optimized total water cost = 645.0
+  Baseline total water cost   = 1040
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 1
+  Cross fills applied: 15
+  Length of ships: [36, 55, 29, 44, 29, 59, 42, 46, 51, 30, 36, 57, 40, 52, 38, 50, 60, 55, 52, 35, 28, 39, 31]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [20]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [22]
+  Time slot 3 (Lock type: Panamax_B): Ships [3]
+  Time slot 4 (Lock type: Panamax_A): Ships [13]
+  Time slot 5 (Lock type: Panamax_B): Ships [4]
+  Time slot 6 (Lock type: Panamax_A): Ships [15]
+  Time slot 7 (Lock type: Panamax_B): Ships [17]
+  Time slot 8 (Lock type: Panamax_A): Ships [5]
+  Time slot 9 (Lock type: Panamax_B): Ships [23]
+  Time slot 10 (Lock type: Panamax_A): Ships [18]
+  Time slot 11 (Lock type: Panamax_B): Ships [6]
+  Time slot 12 (Lock type: Panamax_A): Ships [7]
+  Time slot 13 (Lock type: Panamax_B): Ships [16]
+  Time slot 14 (Lock type: Panamax_A): Ships [10]
+  Time slot 15 (Lock type: Panamax_B): Ships [8]
+  Time slot 16 (Lock type: NeoPanamax): Ships [9]
+  Time slot 17 (Lock type: NeoPanamax): Ships [12]
+  Time slot 18 (Lock type: NeoPanamax): Ships [19]
+  Time slot 19 (Lock type: NeoPanamax): Ships []
+  Time slot 20 (Lock type: NeoPanamax): Ships [11]
+  Time slot 21 (Lock type: NeoPanamax): Ships [14]
+  Time slot 22 (Lock type: NeoPanamax): Ships [1, 21]
+
+--------------------------------------------------
+
+Instance with 25 ships (and 25 time slots):
+  Optimized total water cost = 666.0
+  Baseline total water cost   = 1150
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 3
+  Cross fills applied: 15
+  Length of ships: [51, 57, 33, 29, 56, 36, 25, 25, 27, 54, 42, 28, 27, 40, 43, 60, 33, 49, 34, 43, 26, 35, 45, 50, 38]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [3]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [24]
+  Time slot 3 (Lock type: Panamax_B): Ships [25]
+  Time slot 4 (Lock type: Panamax_A): Ships [17]
+  Time slot 5 (Lock type: Panamax_B): Ships [23]
+  Time slot 6 (Lock type: Panamax_A): Ships [4]
+  Time slot 7 (Lock type: Panamax_B): Ships [16]
+  Time slot 8 (Lock type: Panamax_A): Ships [18]
+  Time slot 9 (Lock type: Panamax_B): Ships [5]
+  Time slot 10 (Lock type: Panamax_A): Ships [15]
+  Time slot 11 (Lock type: Panamax_B): Ships [20]
+  Time slot 12 (Lock type: Panamax_A): Ships [7]
+  Time slot 13 (Lock type: Panamax_B): Ships []
+  Time slot 14 (Lock type: Panamax_A): Ships [11]
+  Time slot 15 (Lock type: Panamax_B): Ships [22]
+  Time slot 16 (Lock type: Panamax_A): Ships [10]
+  Time slot 17 (Lock type: NeoPanamax): Ships [8, 19]
+  Time slot 18 (Lock type: NeoPanamax): Ships [9, 14]
+  Time slot 19 (Lock type: NeoPanamax): Ships [6, 21]
+  Time slot 20 (Lock type: NeoPanamax): Ships [12]
+  Time slot 21 (Lock type: NeoPanamax): Ships []
+  Time slot 22 (Lock type: NeoPanamax): Ships []
+  Time slot 23 (Lock type: NeoPanamax): Ships [13]
+  Time slot 24 (Lock type: NeoPanamax): Ships [1]
+
+--------------------------------------------------
+
+Instance with 27 ships (and 27 time slots):
+  Optimized total water cost = 823.0
+  Baseline total water cost   = 1260
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 1
+  Cross fills applied: 17
+  Length of ships: [58, 52, 36, 39, 59, 35, 36, 59, 55, 34, 38, 51, 29, 40, 52, 47, 56, 32, 26, 57, 49, 50, 46, 49, 56, 53, 48]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [12]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [26]
+  Time slot 3 (Lock type: Panamax_B): Ships [7]
+  Time slot 4 (Lock type: Panamax_A): Ships [3]
+  Time slot 5 (Lock type: Panamax_B): Ships [4]
+  Time slot 6 (Lock type: Panamax_A): Ships [16]
+  Time slot 7 (Lock type: Panamax_B): Ships [27]
+  Time slot 8 (Lock type: Panamax_A): Ships [5]
+  Time slot 9 (Lock type: Panamax_B): Ships [15]
+  Time slot 10 (Lock type: Panamax_A): Ships [20]
+  Time slot 11 (Lock type: Panamax_B): Ships [6]
+  Time slot 12 (Lock type: Panamax_A): Ships [22]
+  Time slot 13 (Lock type: Panamax_B): Ships [24]
+  Time slot 14 (Lock type: Panamax_A): Ships [13]
+  Time slot 15 (Lock type: Panamax_B): Ships [8]
+  Time slot 16 (Lock type: Panamax_A): Ships [17]
+  Time slot 17 (Lock type: Panamax_B): Ships [9]
+  Time slot 18 (Lock type: NeoPanamax): Ships [23]
+  Time slot 19 (Lock type: NeoPanamax): Ships [10]
+  Time slot 20 (Lock type: NeoPanamax): Ships [18, 19]
+  Time slot 21 (Lock type: NeoPanamax): Ships [14]
+  Time slot 22 (Lock type: NeoPanamax): Ships [11]
+  Time slot 23 (Lock type: NeoPanamax): Ships []
+  Time slot 24 (Lock type: NeoPanamax): Ships [21]
+  Time slot 25 (Lock type: NeoPanamax): Ships [25]
+  Time slot 26 (Lock type: NeoPanamax): Ships [1]
+
+--------------------------------------------------
+
+Instance with 29 ships (and 29 time slots):
+  Optimized total water cost = 832.0
+  Baseline total water cost   = 1320
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 2
+  Cross fills applied: 19
+  Length of ships: [30, 54, 50, 43, 46, 45, 25, 51, 55, 59, 39, 57, 44, 32, 56, 49, 31, 31, 41, 42, 55, 28, 57, 51, 46, 37, 49, 30, 49]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships [3]
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [28]
+  Time slot 3 (Lock type: Panamax_B): Ships [15]
+  Time slot 4 (Lock type: Panamax_A): Ships [4]
+  Time slot 5 (Lock type: Panamax_B): Ships [13]
+  Time slot 6 (Lock type: Panamax_A): Ships [6]
+  Time slot 7 (Lock type: Panamax_B): Ships [24]
+  Time slot 8 (Lock type: Panamax_A): Ships [5]
+  Time slot 9 (Lock type: Panamax_B): Ships [18]
+  Time slot 10 (Lock type: Panamax_A): Ships [20]
+  Time slot 11 (Lock type: Panamax_B): Ships [26]
+  Time slot 12 (Lock type: Panamax_A): Ships [16]
+  Time slot 13 (Lock type: Panamax_B): Ships [21]
+  Time slot 14 (Lock type: Panamax_A): Ships [7]
+  Time slot 15 (Lock type: Panamax_B): Ships [27]
+  Time slot 16 (Lock type: Panamax_A): Ships [10]
+  Time slot 17 (Lock type: Panamax_B): Ships [8]
+  Time slot 18 (Lock type: Panamax_A): Ships [9]
+  Time slot 19 (Lock type: Panamax_B): Ships []
+  Time slot 20 (Lock type: NeoPanamax): Ships [12]
+  Time slot 21 (Lock type: NeoPanamax): Ships [19, 22]
+  Time slot 22 (Lock type: NeoPanamax): Ships [29]
+  Time slot 23 (Lock type: NeoPanamax): Ships [11]
+  Time slot 24 (Lock type: NeoPanamax): Ships [25]
+  Time slot 25 (Lock type: NeoPanamax): Ships [23]
+  Time slot 26 (Lock type: NeoPanamax): Ships [17]
+  Time slot 27 (Lock type: NeoPanamax): Ships [1, 14]
+  Time slot 28 (Lock type: NeoPanamax): Ships []
+
+--------------------------------------------------
+
+Instance with 31 ships (and 31 time slots):
+  Optimized total water cost = 921.0
+  Baseline total water cost   = 1430
+  Number of feasible solutions: 10
+  Number of infeasible solutions: 0
+  Tandem lockages used: 2
+  Cross fills applied: 19
+  Length of ships: [43, 38, 43, 27, 42, 26, 50, 44, 55, 33, 30, 59, 32, 50, 42, 32, 58, 41, 26, 34, 59, 45, 31, 54, 56, 50, 48, 40, 41, 52, 33]
+  Timetable for best solution:
+
+Timetable by Time Slot:
+  Time slot 0 (Lock type: Panamax_A): Ships []
+  Time slot 1 (Lock type: Panamax_B): Ships [2]
+  Time slot 2 (Lock type: Panamax_A): Ships [3]
+  Time slot 3 (Lock type: Panamax_B): Ships [7]
+  Time slot 4 (Lock type: Panamax_A): Ships [10]
+  Time slot 5 (Lock type: Panamax_B): Ships [11]
+  Time slot 6 (Lock type: Panamax_A): Ships [23]
+  Time slot 7 (Lock type: Panamax_B): Ships [16]
+  Time slot 8 (Lock type: Panamax_A): Ships [5]
+  Time slot 9 (Lock type: Panamax_B): Ships [15]
+  Time slot 10 (Lock type: Panamax_A): Ships [26]
+  Time slot 11 (Lock type: Panamax_B): Ships [4, 6]
+  Time slot 12 (Lock type: Panamax_A): Ships [20]
+  Time slot 13 (Lock type: Panamax_B): Ships [24]
+  Time slot 14 (Lock type: Panamax_A): Ships [17]
+  Time slot 15 (Lock type: Panamax_B): Ships [14]
+  Time slot 16 (Lock type: Panamax_A): Ships [22]
+  Time slot 17 (Lock type: Panamax_B): Ships [8]
+  Time slot 18 (Lock type: Panamax_A): Ships [1]
+  Time slot 19 (Lock type: Panamax_B): Ships [13]
+  Time slot 20 (Lock type: Panamax_A): Ships [30]
+  Time slot 21 (Lock type: NeoPanamax): Ships [9]
+  Time slot 22 (Lock type: NeoPanamax): Ships []
+  Time slot 23 (Lock type: NeoPanamax): Ships [19, 31]
+  Time slot 24 (Lock type: NeoPanamax): Ships [12]
+  Time slot 25 (Lock type: NeoPanamax): Ships [25]
+  Time slot 26 (Lock type: NeoPanamax): Ships [27]
+  Time slot 27 (Lock type: NeoPanamax): Ships [29]
+  Time slot 28 (Lock type: NeoPanamax): Ships [21]
+  Time slot 29 (Lock type: NeoPanamax): Ships [28]
+  Time slot 30 (Lock type: NeoPanamax): Ships [18]
