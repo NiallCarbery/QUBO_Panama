@@ -2,11 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import dimod
 
-from utils import generate_ship_parameters, generate_lock_types, get_lock_length, water_cost_for_slot, print_timetable, baseline_water_usage
+from utils import generate_ship_parameters, generate_lock_types, get_lock_length, print_timetable, baseline_water_usage
 from make_Qubo import build_qubo
 from Evaluate import evaluate_solution
 from parameters import *
-
 
 # -----------------------------
 # Function to run a single instance.
@@ -14,7 +13,7 @@ from parameters import *
 def run_instance(num_ships, num_slots):
     B, L = generate_ship_parameters(num_ships)
     lock_types = generate_lock_types(num_slots)
-    Q = build_qubo(B, L, lock_types, lambda_ship, lambda_conflict, lambda_length)
+    Q = build_qubo(B, L, lock_types)
     bqm = dimod.BinaryQuadraticModel.from_qubo(Q)
     sampler = dimod.SimulatedAnnealingSampler()
     sampleset = sampler.sample(bqm, num_reads=NUM_READS)
@@ -49,7 +48,7 @@ def run_instance(num_ships, num_slots):
                     break
         if valid:
             comp_energy, water_cost, tot_benefit, pen, tandem_count, cross_count, _ = evaluate_solution(
-                sample, B, L, lock_types, lambda_water, lambda_length)
+                sample, B, L, lock_types)
             feasible.append((sample, comp_energy, water_cost, tot_benefit, pen, tandem_count, cross_count))
         else:
             infeasible_count += 1

@@ -2,7 +2,7 @@ import itertools
 from utils import get_lock_length
 from parameters import lambda_ship, lambda_conflict, lambda_water, lambda_length, lambda_tandem
 
-def build_qubo(B, L, lock_types, lambda_ship, lambda_conflict, lambda_length):
+def build_qubo(B, L, lock_types):
     """
     Build the QUBO for ship scheduling.
     Decision variable: x[i,t] = 1 if ship i is scheduled in time slot t.

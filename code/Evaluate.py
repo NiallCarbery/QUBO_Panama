@@ -1,7 +1,7 @@
 from utils import get_lock_length, water_cost_for_slot
 from parameters import lambda_ship, lambda_conflict, lambda_water, lambda_length, crossfill_factor
 
-def evaluate_solution(sample, B, L, lock_types, lambda_water, lambda_length):
+def evaluate_solution(sample, B, L, lock_types):
     """
     Evaluate a candidate solution.
     For each time slot:
@@ -60,7 +60,7 @@ def evaluate_solution(sample, B, L, lock_types, lambda_water, lambda_length):
             prev_count = sum(sample[i * T + (t-1)] for i in range(N))
             prev_lock = lock_types[t-1]
             if prev_lock.startswith("Panamax") and lock_types[t].startswith("Panamax") and (prev_count == 2 or prev_count == 1):
-                cost_t *= (crossfill_factor)
+                cost_t *= crossfill_factor
                 cross_fill_count += 1
         total_water_cost += cost_t
 
