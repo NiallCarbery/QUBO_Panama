@@ -1,0 +1,3 @@
+- Obtained outputs and comparison.
+- Benchmarks and performance analysis
+- Logs
