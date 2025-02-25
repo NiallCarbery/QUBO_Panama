@@ -1,0 +1,21 @@
+Ship Type,Canal,Min Length,Max Length
+Container,NeoPanamax,300,366
+Container,Panamax,275,294
+Chemical Tankers,NeoPanamax,190,230
+Chemical Tankers,Panamax,170,190
+Other,NeoPanamax,200,250
+Other,Panamax,150,200
+Liquefied Petroleum Gas,NeoPanamax,230,260
+Liquefied Petroleum Gas,Panamax,225,235
+Dry Bulk,NeoPanamax,230,270
+Dry Bulk,Panamax,225,230
+Vehicle Carriers/RoRo,NeoPanamax,190,200
+Vehicle Carriers/RoRo,Panamax,180,190
+Refrigerated,Panamax,130,160
+Crude Product Tankers,NeoPanamax,250,270
+Crude Product Tankers,Panamax,228,250
+General Cargo,Panamax,150,200
+Passengers,NeoPanamax,280,335
+Passengers,Panamax,200,280
+Liquefied Natural Gas,NeoPanamax,290,300
+Liquefied Natural Gas,Panamax,280,290

@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 
-def generate_ship_lengths(sample_size, data_csv='Total Accumalted Transits by Market Segment and Lock FY 2024.csv', length_ranges_csv='Length Ranges.csv'):
+
+def generate_ship_lengths(sample_size, data_csv='data/Total Accumalted Transits by Market Segment and Lock FY 2024.csv', length_ranges_csv='data/Length Ranges.csv'):
     """
     Generate a list of ship lengths representing the underlying dataset.
 
@@ -19,12 +20,12 @@ def generate_ship_lengths(sample_size, data_csv='Total Accumalted Transits by Ma
     length_ranges_df = pd.read_csv(length_ranges_csv)
     ship_lengths = [] # Empty list to store ship lengths
 
-    # Step 2: Calculate Total Ships and Proportions
+    # Calculate Total Ships and Proportions
     df['Total'] = df['NeoPanamax'] + df['Panamax']
     total_ships = df['Total'].sum()
     df['Proportion'] = df['Total'] / total_ships
 
-    # Step 3: Determine Sample Sizes for Each Ship Type
+    # Determine Sample Sizes for Each Ship Type
     df['Sample Size'] = (df['Proportion'] * sample_size).round().astype(int)
 
     # Adjust Sample Size if Total Doesn't Sum to Desired Sample Size
