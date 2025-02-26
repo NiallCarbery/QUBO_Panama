@@ -1,0 +1,12 @@
+Ship Type,SI,EV,CP,EI
+Container,8,9,5,5
+Chemical Tankers,7,8,5,4
+Other,5,5,5,5
+Liquefied Petroleum Gas,8,7,2,7
+Dry Bulk,6,4,1,5
+Vehicle Carriers/RoRo,7,8,3,6
+Refrigerated,9,8,10,5
+Crude Product Tankers,9,7,1,3
+General Cargo,6,6,5,5
+Passengers,5,5,7,4
+Liquefied Natural Gas,10,8,2,8

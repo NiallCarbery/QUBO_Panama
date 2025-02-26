@@ -1,5 +1,12 @@
 from utils import get_lock_length, water_cost_for_slot
-from parameters import lambda_ship, lambda_conflict, lambda_water, lambda_length, crossfill_factor
+from parameters import (
+    lambda_ship,
+    lambda_conflict,
+    lambda_water,
+    lambda_length,
+    crossfill_factor,
+)
+
 
 def evaluate_solution(sample, B, L, lock_types):
     """
@@ -8,9 +15,9 @@ def evaluate_solution(sample, B, L, lock_types):
       - Compute water cost.
       - Check if exactly 2 ships are scheduled; if so, check whether their combined length exceeds
         the lock’s available length and add a penalty if it does.
-    
+
     Also checks ship-once and time-slot capacity constraints.
-    
+
     Returns a tuple:
       (computed_energy, total_water_cost, total_benefit, total_penalty, tandem_count, cross_fill_count, infeasibility_reasons)
     """
@@ -55,14 +62,28 @@ def evaluate_solution(sample, B, L, lock_types):
             if total_length > available_length:
                 excess = total_length - available_length
                 total_penalty += lambda_length * excess
-                infeasibility_reasons.append(f"Time slot {t} exceeds lock length by {excess} meters")
+                infeasibility_reasons.append(
+                    f"Time slot {t} exceeds lock length by {excess} meters"
+                )
         if t > 0:
-            prev_count = sum(sample[i * T + (t-1)] for i in range(N))
-            prev_lock = lock_types[t-1]
-            if prev_lock.startswith("Panamax") and lock_types[t].startswith("Panamax") and (prev_count == 2 or prev_count == 1):
+            prev_count = sum(sample[i * T + (t - 1)] for i in range(N))
+            prev_lock = lock_types[t - 1]
+            if (
+                prev_lock.startswith("Panamax")
+                and lock_types[t].startswith("Panamax")
+                and (prev_count == 2 or prev_count == 1)
+            ):
                 cost_t *= crossfill_factor
                 cross_fill_count += 1
         total_water_cost += cost_t
 
     computed_energy = -total_benefit + total_penalty + lambda_water * total_water_cost
-    return computed_energy, total_water_cost, total_benefit, total_penalty, tandem_count, cross_fill_count, infeasibility_reasons
+    return (
+        computed_energy,
+        total_water_cost,
+        total_benefit,
+        total_penalty,
+        tandem_count,
+        cross_fill_count,
+        infeasibility_reasons,
+    )
