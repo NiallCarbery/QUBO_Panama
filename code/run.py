@@ -8,9 +8,9 @@ from evaluate import evaluate_solution
 from parameters import *
 
 
-def run_instance(num_ships, num_slots, NUM_READS=10):
+def run_instance(num_ships, num_time_slots, NUM_READS=10):
     B, L = generate_ship_parameters(num_ships)
-    lock_types = generate_lock_types(num_slots)
+    lock_types = generate_lock_types(num_time_slots)
     Q = build_qubo(B, L, lock_types)
     bqm = dimod.BinaryQuadraticModel.from_qubo(Q)
     sampler = dimod.SimulatedAnnealingSampler()
@@ -19,7 +19,7 @@ def run_instance(num_ships, num_slots, NUM_READS=10):
     feasible = []
     infeasible_count = 0
     infeasibility_reasons = []
-    T = num_slots
+    T = num_time_slots
     for sample, energy in sampleset.data(["sample", "energy"]):
         valid = True
         reasons = []
@@ -80,7 +80,7 @@ def run_instance(num_ships, num_slots, NUM_READS=10):
         best_sample = None
         best_tandem = 0
         best_cross = 0
-    baseline_usage = baseline_water_usage(lock_types, num_ships)
+    baseline_usage = baseline_water_usage(lock_types, num_time_slots)
     return (
         best_water_cost,
         baseline_usage,
@@ -99,7 +99,7 @@ def run_instance(num_ships, num_slots, NUM_READS=10):
 # -----------------------------
 # Iterate over instance sizes and graph the results.
 # -----------------------------
-def iteration_run(instance_sizes = list(range(3, 10, 2))):
+def iteration_run(instance_sizes = list(range(3, 10, 2)), NUM_READS=10):
     """
     Iterate over each run printing the runs of the reults while also tracking the infeasibility reasons.
     """
@@ -115,7 +115,7 @@ def iteration_run(instance_sizes = list(range(3, 10, 2))):
     for n in instance_sizes:
         # Set number of time slots equal to number of ships.
         T = n
-        instance_results = np.array(run_instance(n, T))
+        instance_results = np.array(run_instance(n, T, NUM_READS))
         best_water_costs.append(instance_results[0] if instance_results[0] is not None else np.nan)
         baseline_costs.append(instance_results[1])
         feasible_counts.append(instance_results[6])

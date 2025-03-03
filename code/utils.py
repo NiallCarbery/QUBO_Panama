@@ -50,10 +50,10 @@ def print_timetable(sample, num_ships, num_slots, lock_types):
         print(f"  Time slot {t} (Lock type: {lock_types[t]}): Ships {ships}")
 
 
-def baseline_water_usage(lock_types, num_ships):
+def baseline_water_usage(lock_types, num_time_slots):
     cost = 0
     # Now, the number of time slots equals num_ships.
-    for t in range(num_ships):
+    for t in range(num_time_slots):
         cost += water_cost_for_slot(lock_types[t], 1)
     return cost
 
@@ -68,7 +68,7 @@ def print_results(n, T, instance_results):
     print(f"  Number of infeasible solutions: {instance_results[7]}")
     print(f"  Tandem lockages used: {instance_results[8]}")
     print(f"  Cross fills applied: {instance_results[9]}")
-    print(f"  Length of ships: {instance_results[2]}")
+    print(f"  Length of ships: {instance_results[3]}")
     if instance_results[10]:
         print(f"  Infeasibility reasons: {instance_results[10]}")
 
