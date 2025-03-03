@@ -1,12 +1,6 @@
 import itertools
 from utils import get_lock_length
-from parameters import (
-    lambda_ship,
-    lambda_conflict,
-    lambda_water,
-    lambda_length,
-    lambda_tandem,
-)
+from parameters import *
 
 
 def build_qubo(B, L, lock_types):

@@ -107,10 +107,3 @@ def generate_ship_lengths(
 
     # Return the final DataFrame
     return ship_lengths_df
-
-
-# Example usage:
-if __name__ == "__main__":
-    sample_size = 30  # Or any other desired sample size
-    ship_lengths_df = generate_ship_lengths(sample_size)
-    print(ship_lengths_df)

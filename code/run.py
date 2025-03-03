@@ -2,19 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import dimod
 
-from utils import (
-    generate_ship_parameters,
-    generate_lock_types,
-    get_lock_length,
-    print_timetable,
-    baseline_water_usage,
-)
-from make_Qubo import build_qubo
-from Evaluate import evaluate_solution
+from utils import *
+from make_qubo import build_qubo
+from evaluate import evaluate_solution
 from parameters import *
 
 
-def run_instance(num_ships, num_slots):
+def run_instance(num_ships, num_slots, NUM_READS=10):
     B, L = generate_ship_parameters(num_ships)
     lock_types = generate_lock_types(num_slots)
     Q = build_qubo(B, L, lock_types)
@@ -105,7 +99,7 @@ def run_instance(num_ships, num_slots):
 # -----------------------------
 # Iterate over instance sizes and graph the results.
 # -----------------------------
-def iteration_run():
+def iteration_run(instance_sizes = list(range(3, 10, 2))):
     """
     Iterate over each run printing the runs of the reults while also tracking the infeasibility reasons.
     """
@@ -121,43 +115,19 @@ def iteration_run():
     for n in instance_sizes:
         # Set number of time slots equal to number of ships.
         T = n
-        (
-            best_cost,
-            baseline_usage,
-            B_inst,
-            L_inst,
-            lock_types,
-            best_sample,
-            feas_count,
-            infeas_count,
-            tandem_count,
-            cross_count,
-            infeasibility_reasons,
-        ) = run_instance(n, T)
-        best_water_costs.append(best_cost if best_cost is not None else np.nan)
-        baseline_costs.append(baseline_usage)
-        feasible_counts.append(feas_count)
-        infeasible_counts.append(infeas_count)
-        tandem_counts.append(tandem_count)
-        cross_fill_counts.append(cross_count)
-        infeasibility_reasons_list.append(infeasibility_reasons)
+        instance_results = np.array(run_instance(n, T))
+        best_water_costs.append(instance_results[0] if instance_results[0] is not None else np.nan)
+        baseline_costs.append(instance_results[1])
+        feasible_counts.append(instance_results[6])
+        infeasible_counts.append(instance_results[7])
+        tandem_counts.append(instance_results[8])
+        cross_fill_counts.append(instance_results[9])
+        infeasibility_reasons_list.append(instance_results[10])
 
-        print(f"Instance with {n} ships (and {T} time slots):")
-        print(f"  Optimized total water cost = {best_cost}")
-        print(f"  Baseline total water cost   = {baseline_usage}")
-        print(f"  Number of feasible solutions: {feas_count}")
-        print(f"  Number of infeasible solutions: {infeas_count}")
-        print(f"  Tandem lockages used: {tandem_count}")
-        print(f"  Cross fills applied: {cross_count}")
-        print(f"  Length of ships: {L_inst}")
-        if infeasibility_reasons:
-            print(f"  Infeasibility reasons: {infeasibility_reasons}")
-        if best_sample is not None:
-            print("  Timetable for best solution:")
-            print_timetable(best_sample, n, T, lock_types)
-        print("\n" + "-" * 50 + "\n")
+        print_results(n, T, instance_results)
+
+        
     return instance_sizes, best_water_costs, baseline_costs
-
 
 def plot(instance_sizes, best_water_costs, baseline_costs):
     """

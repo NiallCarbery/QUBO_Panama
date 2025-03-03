@@ -1,11 +1,5 @@
 from utils import get_lock_length, water_cost_for_slot
-from parameters import (
-    lambda_ship,
-    lambda_conflict,
-    lambda_water,
-    lambda_length,
-    crossfill_factor,
-)
+from parameters import *
 
 
 def evaluate_solution(sample, B, L, lock_types):

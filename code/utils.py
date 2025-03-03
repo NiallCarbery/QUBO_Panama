@@ -56,3 +56,23 @@ def baseline_water_usage(lock_types, num_ships):
     for t in range(num_ships):
         cost += water_cost_for_slot(lock_types[t], 1)
     return cost
+
+def print_results(n, T, instance_results):
+    """
+    Print the results of the runs.
+    """
+    print(f"Instance with {n} ships (and {T} time slots):")
+    print(f"  Optimized total water cost = {instance_results[0]}")
+    print(f"  Baseline total water cost   = {instance_results[1]}")
+    print(f"  Number of feasible solutions: {instance_results[6]}")
+    print(f"  Number of infeasible solutions: {instance_results[7]}")
+    print(f"  Tandem lockages used: {instance_results[8]}")
+    print(f"  Cross fills applied: {instance_results[9]}")
+    print(f"  Length of ships: {instance_results[2]}")
+    if instance_results[10]:
+        print(f"  Infeasibility reasons: {instance_results[10]}")
+
+    if instance_results[5] is not None:
+        print("  Timetable for best solution:")
+        print_timetable(instance_results[5], n, T, instance_results[4])
+    print("\n" + "-" * 50 + "\n")
