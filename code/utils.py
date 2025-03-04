@@ -23,9 +23,9 @@ def generate_lock_types(num_slots):
 
 def get_lock_length(lock_type):
     if lock_type.startswith("Panamax"):
-        return 55
+        return 294
     elif lock_type.startswith("NeoPanamax"):
-        return 70
+        return 366
     else:
         raise ValueError("Unknown lock type")
 
@@ -35,9 +35,9 @@ def water_cost_for_slot(lock_type, count):
         return 0
     elif count in [1, 2]:
         if lock_type.startswith("Panamax"):
-            return 294
+            return 30
         elif lock_type.startswith("NeoPanamax"):
-            return 366
+            return 80
     else:
         return penalty_infeasible * count
 
@@ -46,7 +46,7 @@ def print_timetable(sample, num_ships, num_slots, lock_types):
     T = num_slots
     print("\nTimetable by Time Slot:")
     for t in range(num_slots):
-        ships = [i + 1 for i in range(num_ships) if sample[i * T + t] == 1]
+        ships = [i + 1 for i in range(num_ships) if sample.get(i * T + t, 0) == 1]
         print(f"  Time slot {t} (Lock type: {lock_types[t]}): Ships {ships}")
 
 
@@ -56,6 +56,7 @@ def baseline_water_usage(lock_types, num_time_slots):
     for t in range(num_time_slots):
         cost += water_cost_for_slot(lock_types[t], 1)
     return cost
+
 
 def print_results(n, T, instance_results):
     """

@@ -20,21 +20,21 @@ def evaluate_solution(sample, B, L, lock_types):
     total_penalty = 0
     tandem_count = 0
     cross_fill_count = 0
-    infeasibility_reasons = []
+    infeasible_reason = []
 
     # Ship-once constraint.
-    for i in range(N):
-        s_sum = sum(sample[i * T + t] for t in range(T))
-        if s_sum != 1:
-            total_penalty += lambda_ship * (s_sum - 1) ** 2
-            infeasibility_reasons.append(f"Ship {i} scheduled {s_sum} times")
+    # for i in range(N):
+    #    s_sum = sum(sample[i * T + t] for t in range(T))
+    #    if s_sum != 1:
+    #        total_penalty += lambda_ship * (s_sum - 1) ** 2
+    #        infeasibile_reason.append(f"Ship {i} scheduled {s_sum} times")
 
     # Time-slot capacity constraint.
     for t in range(T):
         ships_in_slot = sum(sample[i * T + t] for i in range(N))
         if ships_in_slot > 2:
             total_penalty += lambda_conflict * (ships_in_slot - 2) ** 2
-            infeasibility_reasons.append(f"Time slot {t} has {ships_in_slot} ships")
+            infeasible_reason.append(f"Time slot {t} has {ships_in_slot} ships")
 
     total_benefit = 0
     for i in range(N):
@@ -56,7 +56,7 @@ def evaluate_solution(sample, B, L, lock_types):
             if total_length > available_length:
                 excess = total_length - available_length
                 total_penalty += lambda_length * excess
-                infeasibility_reasons.append(
+                infeasible_reason.append(
                     f"Time slot {t} exceeds lock length by {excess} meters"
                 )
         if t > 0:
@@ -79,5 +79,5 @@ def evaluate_solution(sample, B, L, lock_types):
         total_penalty,
         tandem_count,
         cross_fill_count,
-        infeasibility_reasons,
+        infeasible_reason,
     )

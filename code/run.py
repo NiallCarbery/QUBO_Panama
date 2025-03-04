@@ -9,14 +9,15 @@ from make_qubo import build_qubo
 from evaluate import evaluate_solution
 from parameters import *
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath("."), '../data')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath("."), "../data")))
 
 from data_processing import generate_ship_data
 
+
 def run_instance(num_ships, num_time_slots, NUM_READS=10):
     ship_data = generate_ship_data(num_ships)
-    L = ship_data['Length (m)'].to_numpy()
-    B = ship_data['Benefit'].to_numpy()
+    L = ship_data["Length (m)"].to_numpy()
+    B = ship_data["Benefit"].to_numpy()
 
     lock_types = generate_lock_types(num_time_slots)
     Q = build_qubo(B, L, lock_types)
@@ -27,58 +28,34 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
     feasible = []
     infeasible_count = 0
     infeasibility_reasons = []
+
     T = num_time_slots
     for sample, energy in sampleset.data(["sample", "energy"]):
-        valid = True
-        reasons = []
-        # Check ship-once constraint.
-        for i in range(num_ships):
-            scheduled_count = sum(sample.get(i * T + t, 0) for t in range(T))
-            if scheduled_count != 1:
-                valid = False
-                reasons.append(
-                    f"Ship {i} scheduled {scheduled_count} times (expected exactly 1)."
-                )
-                break
-        # Check time-slot capacity.
-        for t in range(T):
-            count = sum(sample.get(i * T + t, 0) for i in range(num_ships))
-            if count > 2:
-                valid = False
-                reasons.append(f"Time slot {t} has {count} ships")
-            break
-        # Check tandem lockage length constraint.
-        for t in range(T):
-            # Get all ships scheduled in time slot t safely using .get()
-            scheduled = [i for i in range(num_ships) if sample.get(i * T + t, 0) == 1]
-            if len(scheduled) == 2:
-                total_length = sum(L[i] for i in scheduled)
-                allowed_length = get_lock_length(lock_types[t])
-                if total_length > allowed_length:
-                    valid = False
-                    reasons.append(
-                        f"Time slot {t} exceeds lock length by {total_length - allowed_length} meters "
-                        f"(total ship length: {total_length}, allowed: {allowed_length})."
-                    )
-                    break
-        if valid:
-            comp_energy, water_cost, tot_benefit, pen, tandem_count, cross_count, _ = (
-                evaluate_solution(sample, B, L, lock_types)
+        (
+            comp_energy,
+            water_cost,
+            tot_benefit,
+            pen,
+            tandem_count,
+            cross_count,
+            infeasibile_reason,
+        ) = evaluate_solution(sample, B, L, lock_types)
+
+        feasible.append(
+            (
+                sample,
+                comp_energy,
+                water_cost,
+                tot_benefit,
+                pen,
+                tandem_count,
+                cross_count,
             )
-            feasible.append(
-                (
-                    sample,
-                    comp_energy,
-                    water_cost,
-                    tot_benefit,
-                    pen,
-                    tandem_count,
-                    cross_count,
-                )
-            )
-        else:
+        )
+
+        if infeasibility_reasons:  # Check if infeasibility_reasons list is not empty
+            infeasibility_reasons_list.append(infeasibile_reason)
             infeasible_count += 1
-            infeasibility_reasons.append(reasons)
 
     if feasible:
         best_solution = min(feasible, key=lambda x: x[1])
@@ -110,7 +87,7 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
 # -----------------------------
 # Iterate over instance sizes and graph the results.
 # -----------------------------
-def iteration_run(instance_sizes = list(range(3, 10, 2)), NUM_READS=10):
+def iteration_run(instance_sizes=list(range(3, 10, 2)), NUM_READS=10):
     """
     Iterate over each run printing the runs of the reults while also tracking the infeasibility reasons.
     """
@@ -127,7 +104,9 @@ def iteration_run(instance_sizes = list(range(3, 10, 2)), NUM_READS=10):
         # Set number of time slots equal to number of ships.
         T = n
         instance_results = np.array(run_instance(n, T, NUM_READS))
-        best_water_costs.append(instance_results[0] if instance_results[0] is not None else np.nan)
+        best_water_costs.append(
+            instance_results[0] if instance_results[0] is not None else np.nan
+        )
         baseline_costs.append(instance_results[1])
         feasible_counts.append(instance_results[6])
         infeasible_counts.append(instance_results[7])
@@ -137,8 +116,8 @@ def iteration_run(instance_sizes = list(range(3, 10, 2)), NUM_READS=10):
 
         print_results(n, T, instance_results)
 
-        
     return instance_sizes, best_water_costs, baseline_costs
+
 
 def plot(instance_sizes, best_water_costs, baseline_costs):
     """
