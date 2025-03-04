@@ -12,9 +12,45 @@ This project implements a Quadratic Unconstrained Binary Optimization (QUBO) mod
 - **Simulated Annealing**: Uses simulated annealing to find feasible and optimized solutions.
 - **Visualization**: Plots the optimized water usage cost against the baseline cost for different instance sizes.
 
-## Files
+## Code Overview
 
-- `POC.py`: Main script containing all the functions and logic for generating instances, building the QUBO model, evaluating solutions, and running the optimization.
+### utils.py
+Contains utility functions for generating ship parameters, lock types, calculating water costs, and printing results.
+
+### run.py
+Main script to run the QUBO model instances, evaluate solutions, and plot results.
+
+### QAOA.py
+Implements the QAOA algorithm for solving the QUBO problem using quantum circuits.
+
+### parameters.py
+Defines global tuning parameters used across the project.
+
+### make_qubo.py
+Builds the QUBO matrix for the ship scheduling problem.
+
+### evaluate.py
+Evaluates candidate solutions for the QUBO problem, checking constraints and calculating penalties.
+
+### data_processing.py
+Processes input data to generate ship data for the QUBO model.
+
+## Dependencies and Requirements
+
+To run the code, you need the following dependencies:
+
+- Python 3.7 or higher
+- numpy
+- pandas
+- matplotlib
+- qiskit
+- dimod
+
+You can install the required packages using pip:
+
+```sh
+pip install numpy pandas matplotlib qiskit dimod
+```
 
 ## Usage
 
@@ -27,8 +63,12 @@ This project implements a Quadratic Unconstrained Binary Optimization (QUBO) mod
 
 ## Example
 
-To run the script and see the results, simply execute the `POC.py` file. The script will iterate over different instance sizes, run the optimization, and plot the results.
+To run the script and see the results, simply execute the `run.py` file. The script will iterate over different instance sizes, run the optimization, and plot the results.
 
 ## QUBO Panama QAOA
 
 This script implements a Quantum Approximate Optimization Algorithm (QAOA) for ship scheduling through the Panama Canal using Quadratic Unconstrained Binary Optimization (QUBO).
+
+## Example Usage Notebook
+
+An example usage of the QUBO Panama model can be found in the Jupyter notebook `example_usage.ipynb` located in the `test` directory. This notebook demonstrates how to import the necessary modules, run the QUBO model, and visualize the results.
