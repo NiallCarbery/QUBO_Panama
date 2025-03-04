@@ -1,5 +1,5 @@
 import itertools
-from utils import get_lock_length
+from utils import get_lock_length, water_cost_for_slot
 from parameters import *
 
 
@@ -19,63 +19,67 @@ def build_qubo(B, L, lock_types):
     T = len(lock_types)
     Q = {}
 
-    # Linear reward: subtract benefit for each assignment.
+    # 1. Linear Terms: iterate by ship and time slot.
     for i in range(N):
         for t in range(T):
             idx = i * T + t
-            Q[(idx, idx)] = Q.get((idx, idx), 0) - B[i]
+            # Apply infeasibility penalty if ship length exceeds slot's allowed length.
+            incomp = penalty_infeasible if L[i] > get_lock_length(lock_types[t]) else 0
+            # Update linear term: subtract ship benefit, add water cost and incompatibility cost.
+            Q[(idx, idx)] = Q.get((idx, idx), 0) - B[i] + water_cost_for_slot(lock_types[t], 1) + incomp
 
-    # Ship-once constraint: each ship must be scheduled exactly once.
-    for i in range(N):
-        indices = [i * T + t for t in range(T)]
-        for idx in indices:
-            Q[(idx, idx)] = Q.get((idx, idx), 0) + lambda_ship - 2 * lambda_ship
-        for idx1, idx2 in itertools.combinations(indices, 2):
-            key = (min(idx1, idx2), max(idx1, idx2))
-            Q[key] = Q.get(key, 0) + 2 * lambda_ship
-
-    # Time-slot capacity constraint: at most two ships per time slot.
+    # 2. Quadratic Terms: Tandem reward for ships scheduled together in the same slot.
     for t in range(T):
-        for i, j in itertools.combinations(range(N), 2):
-            idx_i = i * T + t
-            idx_j = j * T + t
-            Q[(min(idx_i, idx_j), max(idx_i, idx_j))] = (
-                Q.get((min(idx_i, idx_j), max(idx_i, idx_j)), 0) + 2 * lambda_conflict
-            )
-
-    # Tandem lockage length constraint: penalize if two ships in the same slot exceed lock length.
-    for t in range(T):
-        available_length = get_lock_length(lock_types[t])
-        for i, j in itertools.combinations(range(N), 2):
-            if L[i] + L[j] > available_length:
-                idx_i = i * T + t
-                idx_j = j * T + t
-                excess = L[i] + L[j] - available_length
-                penalty_value = lambda_length * excess
-                key = (min(idx_i, idx_j), max(idx_i, idx_j))
-                Q[key] = Q.get(key, 0) + penalty_value
-
-    # Water usage cost integration.
-    for t in range(T):
-        # Add quadratic coupling for ships in the same slot.
-        for i, j in itertools.combinations(range(N), 2):
-            idx_i = i * T + t
-            idx_j = j * T + t
-            key = (min(idx_i, idx_j), max(idx_i, idx_j))
-            Q[key] = Q.get(key, 0) + 2 * lambda_water
-        # Add linear terms for each ship in slot t.
         for i in range(N):
-            idx = i * T + t
-            Q[(idx, idx)] = Q.get((idx, idx), 0) - 3 * lambda_water
-
-    # Reward valid tandem lockage.
-    for t in range(T):
-        available_length = get_lock_length(lock_types[t])
-        for i, j in itertools.combinations(range(N), 2):
-            if L[i] + L[j] <= available_length:
+            for j in range(i + 1, N):
                 idx_i = i * T + t
                 idx_j = j * T + t
-                key = (min(idx_i, idx_j), max(idx_i, idx_j))
+                key = (idx_i, idx_j) if idx_i <= idx_j else (idx_j, idx_i)
                 Q[key] = Q.get(key, 0) - lambda_tandem
+
+    # 3. Constraint: Each ship is scheduled exactly once.
+    # Enforce (sum_t x[i,t] - 1)^2 = sum_t x[i,t]^2 - 2 * sum_t x[i,t] + 1,
+    # dropping the constant term.
+    for i in range(N):
+        # List of variables for ship i.
+        ship_vars = [i * T + t for t in range(T)]
+        # Diagonal contributions: each variable gets -lambda_ship.
+        for var in ship_vars:
+            Q[(var, var)] = Q.get((var, var), 0) - lambda_ship
+        # Off-diagonal contributions: for each unique pair add +2*lambda_ship.
+        for a in range(len(ship_vars)):
+            for b in range(a + 1, len(ship_vars)):
+                u = ship_vars[a]
+                v = ship_vars[b]
+                key = (u, v) if u <= v else (v, u)
+                Q[key] = Q.get(key, 0) + 2 * lambda_ship
+
+    # 4. Constraint: Each time slot must host exactly 2 ships.
+    # Enforce (sum_i x[i,t] - 2)^2 = sum_i x[i,t]^2 - 4 * sum_i x[i,t] + 4,
+    # dropping the constant term.
+    for t in range(T):
+        # List of variables for slot t.
+        slot_vars = [i * T + t for i in range(N)]
+        # Diagonal contributions: each gets -3*lambda_lock.
+        for var in slot_vars:
+            Q[(var, var)] = Q.get((var, var), 0) - 3 * lambda_length
+        # Off-diagonal contributions: each unique pair gets +2*lambda_lock.
+        for a in range(len(slot_vars)):
+            for b in range(a + 1, len(slot_vars)):
+                u = slot_vars[a]
+                v = slot_vars[b]
+                key = (u, v) if u <= v else (v, u)
+                Q[key] = Q.get(key, 0) + 2 * lambda_length
+
+    # 5. Quadratic Terms: Panamax Cross‑fill Reward.
+    # For consecutive slots t and t+1, check if the lock types form the pair {"Panamax_A", "Panamax_B"}.
+    for t in range(T - 1):
+        if {lock_types[t], lock_types[t+1]} == {"Panamax_A", "Panamax_B"}:
+            for i in range(N):
+                for j in range(N):
+                    idx_i = i * T + t
+                    idx_j = j * T + (t + 1)
+                    key = (idx_i, idx_j) if idx_i <= idx_j else (idx_j, idx_i)
+                    Q[key] = Q.get(key, 0) - lambda_crossfill
 
     return Q

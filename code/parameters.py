@@ -7,4 +7,5 @@ lambda_length = 20  # Penalty coefficient for tandem lockage length violations
 lambda_tandem = 10.0  # Reward for valid tandem lockage
 lambda_crossfill = 3.0  # Reward for cross filling
 penalty_infeasible = 1000  # Heavy penalty for infeasible assignments
+
 crossfill_factor = 0.3  # Factor for cross filling
