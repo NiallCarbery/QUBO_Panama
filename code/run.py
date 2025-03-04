@@ -1,15 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import dimod
+import os
+import sys
 
 from utils import *
 from make_qubo import build_qubo
 from evaluate import evaluate_solution
 from parameters import *
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath("."), '../data')))
+
+from data_processing import generate_ship_data
 
 def run_instance(num_ships, num_time_slots, NUM_READS=10):
-    B, L = generate_ship_parameters(num_ships)
+    ship_data = generate_ship_data(num_ships)
+    L = ship_data['Length (m)'].to_numpy()
+    B = ship_data['Benefit'].to_numpy()
+
     lock_types = generate_lock_types(num_time_slots)
     Q = build_qubo(B, L, lock_types)
     bqm = dimod.BinaryQuadraticModel.from_qubo(Q)
@@ -25,29 +33,32 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
         reasons = []
         # Check ship-once constraint.
         for i in range(num_ships):
-            if sum(sample[i * T + t] for t in range(T)) != 1:
+            scheduled_count = sum(sample.get(i * T + t, 0) for t in range(T))
+            if scheduled_count != 1:
                 valid = False
                 reasons.append(
-                    f"Ship {i} scheduled {sum(sample[i * T + t] for t in range(T))} times"
+                    f"Ship {i} scheduled {scheduled_count} times (expected exactly 1)."
                 )
                 break
         # Check time-slot capacity.
         for t in range(T):
-            if sum(sample[i * T + t] for i in range(num_ships)) > 2:
+            count = sum(sample.get(i * T + t, 0) for i in range(num_ships))
+            if count > 2:
                 valid = False
-                reasons.append(
-                    f"Time slot {t} has {sum(sample[i * T + t] for i in range(num_ships))} ships"
-                )
-                break
+                reasons.append(f"Time slot {t} has {count} ships")
+            break
         # Check tandem lockage length constraint.
         for t in range(T):
-            scheduled = [i for i in range(num_ships) if sample[i * T + t] == 1]
+            # Get all ships scheduled in time slot t safely using .get()
+            scheduled = [i for i in range(num_ships) if sample.get(i * T + t, 0) == 1]
             if len(scheduled) == 2:
                 total_length = sum(L[i] for i in scheduled)
-                if total_length > get_lock_length(lock_types[t]):
+                allowed_length = get_lock_length(lock_types[t])
+                if total_length > allowed_length:
                     valid = False
                     reasons.append(
-                        f"Time slot {t} exceeds lock length by {total_length - get_lock_length(lock_types[t])} meters"
+                        f"Time slot {t} exceeds lock length by {total_length - allowed_length} meters "
+                        f"(total ship length: {total_length}, allowed: {allowed_length})."
                     )
                     break
         if valid:

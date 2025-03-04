@@ -35,9 +35,9 @@ def water_cost_for_slot(lock_type, count):
         return 0
     elif count in [1, 2]:
         if lock_type.startswith("Panamax"):
-            return 30
+            return 294
         elif lock_type.startswith("NeoPanamax"):
-            return 80
+            return 366
     else:
         return penalty_infeasible * count
 
