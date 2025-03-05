@@ -37,7 +37,7 @@ def water_cost_for_slot(lock_type, count):
         if lock_type.startswith("Panamax"):
             return 30
         elif lock_type.startswith("NeoPanamax"):
-            return 96
+            return 45
     else:
         return penalty_infeasible * count
 
@@ -70,6 +70,7 @@ def print_results(n, T, instance_results):
     print(f"  Tandem lockages used: {instance_results[8]}")
     print(f"  Cross fills applied: {instance_results[9]}")
     print(f"  Length of ships: {instance_results[3]}")
+    print(f"  Benefit of ships: {instance_results[2]}")
     if instance_results[10]:
         print(f"  Infeasibility reasons: {instance_results[10]}")
 

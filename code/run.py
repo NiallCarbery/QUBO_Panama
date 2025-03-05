@@ -18,8 +18,8 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
     ship_data = generate_ship_data(num_ships)
     L = ship_data["Length (m)"].to_numpy()
     B = ship_data["Benefit"].to_numpy()
-
     lock_types = generate_lock_types(num_time_slots)
+    
     Q = build_qubo(B, L, lock_types)
     bqm = dimod.BinaryQuadraticModel.from_qubo(Q)
     sampler = dimod.SimulatedAnnealingSampler()
@@ -29,46 +29,44 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
     infeasible_count = 0
     infeasibility_reasons = []
 
-    T = num_time_slots
     for sample, energy in sampleset.data(["sample", "energy"]):
         (
             comp_energy,
             water_cost,
-            tot_benefit,
-            pen,
+            total_benefit,
+            total_penalty,
             tandem_count,
             cross_count,
             infeasibile_reason,
         ) = evaluate_solution(sample, B, L, lock_types)
 
-        feasible.append(
-            (
+        if total_penalty == 0:
+            feasible.append((
                 sample,
-                comp_energy,
                 water_cost,
-                tot_benefit,
-                pen,
+                total_benefit,
                 tandem_count,
-                cross_count,
-            )
-        )
+                cross_count
+            ))
 
-        if infeasibility_reasons:  # Check if infeasibility_reasons list is not empty
-            infeasibility_reasons_list.append(infeasibile_reason)
+        if infeasibile_reason:  # Check if infeasibility_reasons list is not empty
+            infeasibility_reasons.append(infeasibile_reason)
             infeasible_count += 1
 
     if feasible:
         best_solution = min(feasible, key=lambda x: x[1])
-        best_water_cost = best_solution[2]
+        best_water_cost = best_solution[1]
         best_sample = best_solution[0]
-        best_tandem = best_solution[5]
-        best_cross = best_solution[6]
+        best_tandem = best_solution[3]
+        best_cross = best_solution[4]
     else:
         best_water_cost = None
         best_sample = None
         best_tandem = 0
         best_cross = 0
+
     baseline_usage = baseline_water_usage(lock_types, num_time_slots)
+    
     return (
         best_water_cost,
         baseline_usage,
@@ -103,7 +101,7 @@ def iteration_run(instance_sizes=list(range(3, 10, 2)), NUM_READS=10):
     for n in instance_sizes:
         # Set number of time slots equal to number of ships.
         T = n
-        instance_results = np.array(run_instance(n, T, NUM_READS))
+        instance_results = run_instance(n, T, NUM_READS)
         best_water_costs.append(
             instance_results[0] if instance_results[0] is not None else np.nan
         )
