@@ -23,33 +23,20 @@ def evaluate_solution(sample, B, L, lock_types):
     infeasible_reason = []
     
     # 1. Constraint: Each ship is assigned one time.
-    # (A ship being unassigned is allowed.)
-    #for i in range(N):
-    #    assignments = sum(sample[i * T + t] for t in range(T))
-    #   print(assignments)
-    #    if assignments > 1:
-    #       penalty += penalty_infeasible
-    #        infeasible_reason.append(
-    #            f"Ship {i} assigned {assignments} times (Expected 1)."
-    #        )
-
-    # 1. Constraint: Each ship is assigned one time.
-    for t in range(T):
-        # Sum the assignments for all ships in time slot t.
-        assignments = sum(sample[i * T + t] for i in range(N))
+    for i in range(N):
+        assignments = sum(sample[i * T + t] for t in range(T))
         if assignments != 1:
             penalty += penalty_infeasible
             infeasible_reason.append(
-                f"Ship assigned {assignments} times (Expected 1)."
+                f"Ship {i+1} assigned {assignments} times (Expected 1)."
             )
-
 
     # Check if there are more than 2 ships in a given slot
     for t in range(T):
         ships_in_slot = sum(sample[i * T + t] for i in range(N))
         if ships_in_slot > 2:
             penalty += penalty_infeasible
-            infeasible_reason.append(f"Time slot {t} has {ships_in_slot} ships")
+            infeasible_reason.append(f"Time slot {t+1} has {ships_in_slot} ships")
 
     total_benefit = 0
     for i in range(N):
