@@ -1,14 +1,14 @@
 import pandas as pd
 import numpy as np
-
+from pathlib import Path
 
 
 def generate_ship_data(
     sample_size,
-    data_csv="../data/Total Accumalted Transits by Market Segment and Lock FY 2024.csv",
-    length_ranges_csv="../data/Length Ranges.csv",
-    factor_scores_csv="../data/Benefit Factors.csv",
-):
+    data_csv: Path = None,
+    length_ranges_csv: Path = None,
+    factor_scores_csv: Path = None
+    ):
     """
     Generate a list of ship lengths representing the underlying dataset.
 
@@ -20,6 +20,15 @@ def generate_ship_data(
     Returns:
     - ship_lengths_df (DataFrame): DataFrame containing the sampled ship lengths.
     """
+
+    module_dir = Path(__file__).resolve().parent
+    if data_csv is None:
+        data_csv = module_dir / "../data/Total Accumalted Transits by Market Segment and Lock FY 2024.csv"
+    if length_ranges_csv is None:
+        length_ranges_csv = module_dir / "../data/Length Ranges.csv"
+    if factor_scores_csv is None:
+        factor_scores_csv = module_dir / "../data/Benefit Factors.csv"
+
     # Step 1: Load the Dataset from the external CSV
     df = pd.read_csv(data_csv)
 
