@@ -43,9 +43,13 @@ def generate_ship_data(
     # Adjust Sample Size if Total Doesn't Sum to Desired Sample Size
     difference = sample_size - df["Sample Size"].sum()
     if difference != 0:
-        # Adjust the sample size for the ship type with the largest proportion
-        max_idx = df["Proportion"].idxmax()
-        df.loc[max_idx, "Sample Size"] += difference
+        # Adjust the sample size for the ship types with the largest proportions
+        sorted_indices = df["Proportion"].sort_values(ascending=False).index
+        for idx in sorted_indices:
+            if difference == 0:
+                break
+            df.loc[idx, "Sample Size"] += 1 if difference > 0 else -1
+            difference += -1 if difference > 0 else 1
 
     # Step 4: Load Length Ranges and Factor Scores from the external CSVs
     length_ranges_df = pd.read_csv(length_ranges_csv)
@@ -138,6 +142,25 @@ def generate_ship_data(
 
     # Reset the index
     ship_lengths_df.reset_index(drop=True, inplace=True)
+
+    # Ensure the total number of ships matches the requested sample size
+    while len(ship_lengths_df) < sample_size:
+        extra_ships_needed = sample_size - len(ship_lengths_df)
+        for _ in range(extra_ships_needed):
+            # Add Panamax ships
+            panamax_row = length_ranges_df[
+                (length_ranges_df["Canal"] == "Panamax")
+            ].sample(1)
+            low = panamax_row["Min Length"].values[0]
+            high = panamax_row["Max Length"].values[0]
+            length = np.random.uniform(low, high)
+            new_ship = pd.DataFrame([{
+                "Ship Type": "Panamax",
+                "Canal": "Panamax",
+                "Length (m)": round(length, 2),
+                "Benefit": round(benefit, 2),
+            }])
+            ship_lengths_df = pd.concat([ship_lengths_df, new_ship], ignore_index=True)
 
     # Return the final DataFrame
     return ship_lengths_df
