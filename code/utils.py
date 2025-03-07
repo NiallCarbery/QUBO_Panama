@@ -1,12 +1,4 @@
-import random
-from parameters import penalty_infeasible
-
-
-def generate_ship_parameters(num_ships):
-    B = [random.randint(8, 12) for _ in range(num_ships)]
-    L = [random.randint(25, 60) for _ in range(num_ships)]
-    return B, L
-
+import numpy as np
 
 def generate_lock_types(num_slots):
     lock_types = []
@@ -39,7 +31,7 @@ def water_cost_for_slot(lock_type, count):
         elif lock_type.startswith("NeoPanamax"):
             return 45
     else:
-        return penalty_infeasible * count
+        return 300
 
 
 def print_timetable(sample, num_ships, num_slots, lock_types):
@@ -78,3 +70,28 @@ def print_results(n, T, instance_results):
         print("  Timetable for best solution:")
         print_timetable(instance_results[5], n, T, instance_results[4])
     print("\n" + "-" * 50 + "\n")
+
+def qubo_dict_to_matrix(qubo):
+    """
+    Convert a QUBO dictionary to a matrix.
+    
+    Parameters:
+      qubo (dict): A dictionary where keys are tuples (i, j) and values are coefficients.
+    
+    Returns:
+      np.ndarray: A 2D numpy array representing the QUBO matrix.
+    """
+    # Find the maximum index in the keys to determine the matrix size.
+    max_index = 0
+    for i, j in qubo.keys():
+        max_index = max(max_index, i, j)
+    n = max_index + 1
+    
+    # Initialize an n x n matrix of zeros.
+    Q = np.zeros((n, n))
+    
+    # Fill in the matrix using dictionary items.
+    for (i, j), value in qubo.items():
+        Q[i, j] = value
+
+    return Q
