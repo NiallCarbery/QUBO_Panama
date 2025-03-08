@@ -1,20 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import dimod
-import os
-import sys
 
 from utils import *
 from make_qubo import build_qubo
 from evaluate import evaluate_solution
 from parameters import *
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.abspath("."), "../data")))
+import time
 
 from data_processing import generate_ship_data
 
 
-def run_instance(num_ships, num_time_slots, NUM_READS=10):
+def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False):
     ship_data = generate_ship_data(num_ships)
     L = ship_data["Length (m)"].to_numpy()
     B = ship_data["Benefit"].to_numpy()
@@ -23,7 +20,9 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
     Q = build_qubo(B, L, lock_types)
     bqm = dimod.BinaryQuadraticModel.from_qubo(Q)
     sampler = dimod.SimulatedAnnealingSampler()
+    start_time = time.time()          # Start timing.
     sampleset = sampler.sample(bqm, num_reads=NUM_READS)
+    elapsed_time = time.time() - start_time
 
     feasible = []
     infeasible_count = 0
@@ -67,6 +66,15 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
         best_tandem = 0
         best_cross = 0
 
+    if optimal == True:
+        optimal_result = assign_ships_to_slots(B, L, lock_types)
+        optimal_values = evaluate_solution(optimal_result, B, L , lock_types)
+        optimal_water_cost = optimal_values[1]
+    else:
+        optimal_water_cost = None
+        optimal_values = None
+        optimal_result = None
+
     baseline_usage = baseline_water_usage(lock_types, num_time_slots)
     
     return (
@@ -81,13 +89,17 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10):
         best_tandem,
         best_cross,
         infeasibility_reasons,
+        optimal_water_cost,
+        optimal_values,
+        elapsed_time,
+        optimal_result
     )
 
 
 # -----------------------------
 # Iterate over instance sizes and graph the results.
 # -----------------------------
-def iteration_run(instance_sizes=list(range(3, 10, 2)), NUM_READS=10):
+def iteration_run(instance_sizes=list(range(3, 10, 2)), NUM_READS=10, optimal=False):
     """
     Iterate over each run printing the runs of the reults while also tracking the infeasibility reasons.
     """
@@ -99,11 +111,13 @@ def iteration_run(instance_sizes=list(range(3, 10, 2)), NUM_READS=10):
     infeasible_counts = []
     tandem_counts = []
     cross_fill_counts = []
+    times = []
+    optimal_waters = []
 
     for n in instance_sizes:
         # Set number of time slots equal to number of ships.
         T = n
-        instance_results = run_instance(n, T, NUM_READS)
+        instance_results = run_instance(n, T, NUM_READS, optimal)
         best_water_costs.append(
             instance_results[0] if instance_results[0] is not None else np.nan
         )
@@ -113,10 +127,24 @@ def iteration_run(instance_sizes=list(range(3, 10, 2)), NUM_READS=10):
         tandem_counts.append(instance_results[8])
         cross_fill_counts.append(instance_results[9])
         infeasibility_reasons_list.append(instance_results[10])
+        times.append(instance_results[13])
 
+        print('Simualted Annealing Results')
+        print(f"Sampling took {instance_results[13]:.2f} seconds.")
         print_results(n, T, instance_results)
 
-    return instance_sizes, best_water_costs, baseline_costs
+
+        if optimal == True:
+            print('Optimal Results')
+            print("  Timetable for best solution:")
+            print(f"Water Cost {instance_results[11]:.2f}.")
+            print_timetable(instance_results[14], n, T, instance_results[4])
+            optimal_waters.append(instance_results[11])
+
+        print("\n" + "-" * 50 + "\n")
+
+
+    return instance_sizes, best_water_costs, baseline_costs, times, optimal_waters
 
 
 def assign_ships_to_slots(B, L, lock_types):
@@ -201,24 +229,30 @@ def assign_ships_to_slots(B, L, lock_types):
 
 
 
-def plot(instance_sizes, best_water_costs, baseline_costs):
+def plot(instance_sizes, best_water_costs, baseline_costs, optimal_water):
     """
     Plot the water usage for all time slots versus the number of time slots used in optimal solution.
     """
     plt.figure(figsize=(10, 6))
-    plt.plot(
+    plt.scatter(
         instance_sizes,
         best_water_costs,
         marker="o",
         label="Optimized (Best) Water Usage",
     )
-    plt.plot(
+    plt.scatter(
         instance_sizes,
         baseline_costs,
         marker="x",
-        linestyle="--",
         label="Baseline Water Usage (One ship per slot)",
     )
+    plt.scatter(
+        instance_sizes,
+        optimal_water,
+        marker="o",
+        label="Optimal Water Usage Cost",
+    )
+
     plt.xlabel("Number of Ships (Transits)")
     plt.ylabel("Total Water Usage Cost")
     plt.title("Water Usage vs. Number of Ships")
