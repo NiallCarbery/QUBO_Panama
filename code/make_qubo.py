@@ -30,65 +30,67 @@ def build_qubo(B, L, lock_types, dynamic=False):
     T = len(lock_types)
     Q = {}
 
-    if dynamic== False:
-        # Linear reward: subtract benefit for each assignment.
-        for i in range(N):
-            for t in range(T):
-                idx = i * T + t
-                # If individual ship exceeds the slot's capacity, add infeasibility penalty.
-                incomp = lambda_length if L[i] > get_lock_length(lock_types[t]) else 0
-                # Linear contribution: subtract benefit, add water cost, plus incompatibility penalty.
-                Q[(idx, idx)] = Q.get((idx, idx), 0) + water_cost_for_slot(lock_types[t], 1) * lambda_water + incomp
-        
-        # Ship-once constraint: each ship must be scheduled exactly once.
-        for i in range(N):
-            indices = [i * T + t for t in range(T)]
-            for idx in indices:
-                Q[(idx, idx)] = Q.get((idx, idx), 0) - lambda_once_reward
-            for idx1, idx2 in itertools.combinations(indices, 2):
-                key = (min(idx1, idx2), max(idx1, idx2))
-                Q[key] = Q.get(key, 0) + 2 * lambda_once_penalty
-        
-        # Time-slot capacity constraint: at most two ships per time slot.
-        for t in range(T):
-            for i, j in itertools.combinations(range(N), 2):
-                idx_i = i * T + t
-                idx_j = j * T + t
-                Q[(min(idx_i, idx_j), max(idx_i, idx_j))] = Q.get((min(idx_i, idx_j), max(idx_i, idx_j)), 0) + 2 * lambda_conflict
-        
-        # Tandem lockage length constraint: penalize if two ships in the same slot exceed lock length.
-        for t in range(T):
-            available_length = get_lock_length(lock_types[t])
-            for i, j in itertools.combinations(range(N), 2):
-                if L[i] + L[j] > available_length:
-                    idx_i = i * T + t
-                    idx_j = j * T + t
-                    key = (min(idx_i, idx_j), max(idx_i, idx_j))
-                    Q[key] = Q.get(key, 0) + lambda_length
+    # Capacity thresholds (in meters)
+    panamax_capacity = get_lock_length('Panamax')  # ship must be <= 294 for Panamax
+    neo_capacity     = get_lock_length('NeoPanamax')  # for two short ships in NeoPanamax, their sum must be < 366
 
-        # For consecutive slots t and t+1 with lock types {"Panamax_A", "Panamax_B"},
-        # add a bonus for pairing any ships across these slots.
-        for t in range(T - 1):
-            if {lock_types[t], lock_types[t+1]} == {"Panamax_A", "Panamax_B"}:
-                for i in range(N):
-                    for j in range(N):
-                        idx_i = i * T + t
-                        idx_j = j * T + (t + 1)
-                        key = (idx_i, idx_j) if idx_i <= idx_j else (idx_j, idx_i)
-                        Q[key] = Q.get(key, 0) - lambda_crossfill
+    # QUBO is stored as a dictionary, with keys as tuples (p, q) corresponding to variables.
+    Q = {}
 
+    def add_term(p, q, coeff):
+        key = (min(p, q), max(p, q))
+        Q[key] = Q.get(key, 0) + coeff
 
-        # Reward valid tandem lockage.
-        for t in range(T):
-            available_length = get_lock_length(lock_types[t])
-            for i, j in itertools.combinations(range(N), 2):
-                if L[i] + L[j] <= available_length:
-                    idx_i = i * T + t
-                    idx_j = j * T + t
-                    key = (min(idx_i, idx_j), max(idx_i, idx_j))
-                    Q[key] = Q.get(key, 0) - lambda_tandem
+    def idx(i, j):
+        """Flatten the two-dimensional indices (ship, slot) into a single index."""
+        return i * T + j
 
-    else:
+    # 1. Enforce that each ship is assigned exactly once.
+    for i in range(N):
+        indices = [idx(i, j) for j in range(T)]
+        # Linear terms: -lam for every assignment variable.
+        for j in range(T):
+            add_term(idx(i, j), idx(i, j), -lambda_ship)
+        # Quadratic terms: 2*lam for every pair of assignments for ship i.
+        for a in range(len(indices)):
+            for b in range(a + 1, len(indices)):
+                add_term(indices[a], indices[b], 2 * lambda_ship)
+
+    # 2. Enforce time-slot capacity constraints and lock-type compatibility.
+    for j in range(T):
+        # (a) Build the list of flattened indices for slot j.
+        slot_indices = [idx(i, j) for i in range(N)]
+        lt = lock_types[j]
+
+        if lt != "NeoPanamax":
+            # Panamax slot: allow at most one assignment.
+            for a in range(len(slot_indices)):
+                for b in range(a + 1, len(slot_indices)):
+                    add_term(slot_indices[a], slot_indices[b], lambda_time_p)
+            # Also, if a ship is “long” (L > panamax_capacity) and is assigned to a Panamax,
+            # add a penalty.
+            for i in range(N):
+                if L[i] > panamax_capacity:
+                    add_term(idx(i, j), idx(i, j), lambda_length_p)
+        else:
+            # NeoPanamax slot: allow up to two assignments.
+            # First, add a small quadratic penalty for every pair.
+            for a in range(len(slot_indices)):
+                for b in range(a + 1, len(slot_indices)):
+                    add_term(slot_indices[a], slot_indices[b], lambda_time_np)
+            # Now, for every possible pair in this slot, depending on the ships’ types and lengths:
+            #   - If one (or both) of the ships is "long", penalize that pairing (they should not share a lock).
+            #   - Otherwise (both short), if their combined length exceeds neo_capacity, penalize the pair.
+            for i in range(N):
+                for k in range(i + 1, N):
+                    # These terms only come into play if both ship i and ship k are assigned to slot j.
+                    if (L[i] > panamax_capacity) or (L[k] > panamax_capacity):
+                        add_term(idx(i, j), idx(k, j), lambda_conflict)
+                    else:
+                        if L[i] + L[k] > neo_capacity:
+                            add_term(idx(i, j), idx(k, j), lambda_length_np)
+
+    if dynamic == True:
         # 1. Linear Terms: per ship and per slot.
         for i in range(N):
             for t in range(T):
@@ -150,6 +152,6 @@ def build_qubo(B, L, lock_types, dynamic=False):
                         idx_i = i * T + t
                         idx_j = j * T + (t + 1)
                         key = (idx_i, idx_j) if idx_i <= idx_j else (idx_j, idx_i)
-                        Q[key] = Q.get(key, 0) - lambda_crossfill
+                        Q[key] = Q.get(key, 0) - dynamic_lambda_crossfill
 
     return Q

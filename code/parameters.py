@@ -1,15 +1,14 @@
 # Global tuning parameters
 
-lambda_benefit = 2.75
-lambda_once_reward = 65 
-lambda_once_penalty = 19         # Penalty for not scheduling a ship exactly once
-lambda_conflict = 11.5    # Penalty for exceeding two ships per time slot
-lambda_water = 1.0        # Weight for water cost in overall objective
-lambda_length = 45    # Penalty coefficient for tandem lockage length violations
-lambda_tandem = 10      # Reward for valid tandem lockage
-lambda_crossfill = 4.0  # Reward for cross filling
-penalty_infeasible = 200 # Heavy penalty for infeasible assignments
-crossfill_factor = 0.3    # Factor for cross filling
+lambda_ship =  55  # ship-assignment constraint weight.
+lambda_time_p =  100       # time slot pair penalty for Panamax (max one ship).
+lambda_time_np  = 5        # time slot pair penalty for NeoPanamax (allow pair if “good”).
+lambda_length_p = 150          # penalty for a long ship (L > 294) in a Panamax slot.
+lambda_conflict  = 50          # penalty for mixing long ships (or long with any) in a NeoPanamax slot.
+lambda_length_np  =100           # penalty if two short ships in NeoPanamax violate combined capacity.
+
+lambda_once_reward = 65 # Used in evaluate solution, reward fro assigning ship
+penalty_infeasible = 200 # Used in evalueate solution, Heavy penalty for infeasible assignments
 
 dynamic_lambda_ship = 20  # Penalty for not scheduling a ship exactly once
 dynamic_lambda_conflict = 10  # Penalty for exceeding two ships per time slot
