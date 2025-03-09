@@ -21,3 +21,12 @@ Evaluates candidate solutions for the QUBO problem, checking constraints and cal
 ### data_processing.py
 Processes input data to generate ship data for the QUBO model.
 
+### visualization.py
+Provides functions for visualizing the results of the QUBO model.
+
+### optimization.py
+Contains optimization routines for improving the QUBO solutions.
+
+### constraints.py
+Defines the constraints for the QUBO problem and checks if solutions satisfy these constraints.
+

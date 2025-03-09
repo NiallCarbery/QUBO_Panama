@@ -43,13 +43,15 @@ To run the code, you need the following dependencies:
 - numpy
 - pandas
 - matplotlib
-- qiskit
 - dimod
+- pulser
+- pulser_simulation
+- scipy
 
 You can install the required packages using pip:
 
 ```sh
-pip install numpy pandas matplotlib qiskit dimod
+pip install numpy pandas matplotlib dimod pulser pulser_simulation scipy
 ```
 
 ## Usage
@@ -61,14 +63,6 @@ pip install numpy pandas matplotlib qiskit dimod
 5. **Evaluate Solutions**: Evaluates the solutions based on water cost, penalties, and other metrics.
 6. **Plot Results**: Plots the optimized water usage cost against the baseline cost for different instance sizes.
 
-## Example
-
-To run the script and see the results, simply execute the `run.py` file. The script will iterate over different instance sizes, run the optimization, and plot the results.
-
-## QUBO Panama QAOA
-
-This script implements a Quantum Approximate Optimization Algorithm (QAOA) for ship scheduling through the Panama Canal using Quadratic Unconstrained Binary Optimization (QUBO).
-
 ## Example Usage Notebook
 
-An example usage of the QUBO Panama model can be found in the Jupyter notebook `example_usage.ipynb` located in the `test` directory. This notebook demonstrates how to import the necessary modules, run the QUBO model, and visualize the results.
+An example usage of the QUBO Panama model can be found in the Jupyter notebook `example_usage.ipynb`. This notebook demonstrates how to import the necessary modules, run the QUBO model, and visualize the results.
