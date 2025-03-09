@@ -234,19 +234,19 @@ def plot(instance_sizes, best_water_costs, baseline_costs, optimal_water):
     Plot the water usage for all time slots versus the number of time slots used in optimal solution.
     """
     plt.figure(figsize=(10, 6))
-    plt.scatter(
+    plt.plot(
         instance_sizes,
         best_water_costs,
-        marker="o",
+        marker="x",
         label="Optimized (Best) Water Usage",
     )
-    plt.scatter(
+    plt.plot(
         instance_sizes,
         baseline_costs,
-        marker="x",
+        marker="o",
         label="Baseline Water Usage (One ship per slot)",
     )
-    plt.scatter(
+    plt.plot(
         instance_sizes,
         optimal_water,
         marker="o",

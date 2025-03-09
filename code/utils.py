@@ -96,7 +96,7 @@ def qubo_dict_to_matrix(qubo):
 
     return Q
 
-def bitstring_to_assignment(bitstring, measurement_results, num_ships=2, num_time_slots=2):
+def bitstring_to_assignment(bitstring, num_ships=2, num_time_slots=2):
     """
     Converts a bitstring into an assignment dictionary.
     For example, with 2 ships and 2 time slots (4 bits), '1010' becomes:

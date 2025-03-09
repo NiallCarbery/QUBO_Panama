@@ -13,12 +13,6 @@ from embedding import evaluate_mapping_constrained
 from utils import bitstring_to_assignment, generate_lock_types
 from data_processing import generate_ship_data
 
-# (Assumed external functions / classes)
-# from your_library import (build_qubo, qubo_dict_to_matrix, evaluate_mapping, Register,
-#                           DigitalAnalogDevice, Pulse, InterpolatedWaveform, Sequence,
-#                           QutipEmulator, bitstring_to_assignment, evaluate_solution)
-
-
 def run_simulation(num_ships, num_time_slots):
     """
     Runs the simulation for a given number of ships.
@@ -126,7 +120,7 @@ def run_simulation(num_ships, num_time_slots):
         for bit in top_bits
     }
 
-    # (Optional) Print out the sorted top 10% bitstrings with their counts, assignments, and evaluations.
+    # Print out the sorted top 10% bitstrings with their counts, assignments, and evaluations.
     for bit in top_bits:
         print(f"Bitstring: {bit}")
         print(f"  Count: {count_dict[bit]}")
