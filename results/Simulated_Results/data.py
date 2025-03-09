@@ -1,8 +1,8 @@
 import re
 
 # Initialize empty lists for storing the extracted values
-sampling_times = []       # To store the sampling time values as floats
-feasible_solutions = []   # To store the number of feasible solutions as integers
+sampling_times = []  # To store the sampling time values as floats
+feasible_solutions = []  # To store the number of feasible solutions as integers
 
 # Compile regular expressions for performance
 # This pattern looks for lines like "Sampling took 0.28 seconds."
@@ -18,7 +18,7 @@ with open("RUN1.txt", "r") as file:
         if sampling_match:
             # Convert the captured string to a float and append to the list
             sampling_times.append(float(sampling_match.group(1)))
-        
+
         # Try to find the number of feasible solutions in the current line
         feasible_match = feasible_pattern.search(line)
         if feasible_match:

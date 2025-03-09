@@ -16,11 +16,11 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False):
     L = ship_data["Length (m)"].to_numpy()
     B = ship_data["Benefit"].to_numpy()
     lock_types = generate_lock_types(num_time_slots)
-    
+
     Q = build_qubo(B, L, lock_types)
     bqm = dimod.BinaryQuadraticModel.from_qubo(Q)
     sampler = dimod.SimulatedAnnealingSampler()
-    start_time = time.time()          # Start timing.
+    start_time = time.time()  # Start timing.
     sampleset = sampler.sample(bqm, num_reads=NUM_READS)
     elapsed_time = time.time() - start_time
 
@@ -40,14 +40,9 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False):
         ) = evaluate_solution(sample, B, L, lock_types)
 
         if total_penalty == 0:
-            feasible.append((
-                sample,
-                water_cost,
-                total_benefit,
-                tandem_count,
-                cross_count,
-                energy
-            ))
+            feasible.append(
+                (sample, water_cost, total_benefit, tandem_count, cross_count, energy)
+            )
 
         if infeasibile_reason:  # Check if infeasibility_reasons list is not empty
             infeasibility_reasons.append(infeasibile_reason)
@@ -68,7 +63,7 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False):
 
     if optimal == True:
         optimal_result = assign_ships_to_slots(B, L, lock_types)
-        optimal_values = evaluate_solution(optimal_result, B, L , lock_types)
+        optimal_values = evaluate_solution(optimal_result, B, L, lock_types)
         optimal_water_cost = optimal_values[1]
     else:
         optimal_water_cost = None
@@ -76,7 +71,7 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False):
         optimal_result = None
 
     baseline_usage = baseline_water_usage(lock_types, num_time_slots)
-    
+
     return (
         best_water_cost,
         baseline_usage,
@@ -92,7 +87,7 @@ def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False):
         optimal_water_cost,
         optimal_values,
         elapsed_time,
-        optimal_result
+        optimal_result,
     )
 
 
@@ -129,20 +124,18 @@ def iteration_run(instance_sizes=list(range(3, 10, 2)), NUM_READS=10, optimal=Fa
         infeasibility_reasons_list.append(instance_results[10])
         times.append(instance_results[13])
 
-        print('Simualted Annealing Results')
+        print("Simualted Annealing Results")
         print(f"Sampling took {instance_results[13]:.2f} seconds.")
         print_results(n, T, instance_results)
 
-
         if optimal == True:
-            print('Optimal Results')
+            print("Optimal Results")
             print("  Timetable for best solution:")
             print(f"Water Cost {instance_results[11]:.2f}.")
             print_timetable(instance_results[14], n, T, instance_results[4])
             optimal_waters.append(instance_results[11])
 
         print("\n" + "-" * 50 + "\n")
-
 
     return instance_sizes, best_water_costs, baseline_costs, times, optimal_waters
 
@@ -153,21 +146,21 @@ def assign_ships_to_slots(B, L, lock_types):
     L: list of ship lengths
     lock_types: list of lock types for each time slot, e.g.,
                 ['Panamax', 'NeoPanamax', 'Panamax', ...]
-                
-    The function returns an assignment dictionary where keys correspond to the 
+
+    The function returns an assignment dictionary where keys correspond to the
     flattened (ship_id, slot) indices and a 1 means the ship is assigned to that slot.
     """
     num_ships = len(L)
     num_time_slots = len(lock_types)
-    
+
     # Initialize a flattened assignment dictionary.
     assignment = {idx: 0 for idx in range(num_ships * num_time_slots)}
     assigned = [False] * num_ships
 
     # Create lists of time slot indices by lock type.
-    neo_slots = [i for i, lt in enumerate(lock_types) if lt == 'NeoPanamax']
-    panamax_slots = [i for i, lt in enumerate(lock_types) if lt.startswith('Panamax')]
-    
+    neo_slots = [i for i, lt in enumerate(lock_types) if lt == "NeoPanamax"]
+    panamax_slots = [i for i, lt in enumerate(lock_types) if lt.startswith("Panamax")]
+
     # Process slots in descending order (if you want to fill later slots first).
     neo_slots.sort(reverse=True)
     panamax_slots.sort(reverse=True)
@@ -197,7 +190,7 @@ def assign_ships_to_slots(B, L, lock_types):
         n = len(unassigned_ships)
         # Try every distinct pair.
         for a in range(n):
-            for b in range(a+1, n):
+            for b in range(a + 1, n):
                 i, j = unassigned_ships[a], unassigned_ships[b]
                 if L[i] + L[j] < 366:  # condition: combined length less than 366 meters
                     # Assign both ships to this slot.
@@ -212,21 +205,20 @@ def assign_ships_to_slots(B, L, lock_types):
         # Optional: if no pair is found, you might assign one individual ship (if it fits the lock).
         if not pair_found:
             for i in unassigned_ships:
-                if L[i] < get_lock_length('NeoPanamax'):
+                if L[i] < get_lock_length("NeoPanamax"):
                     assignment[i * num_time_slots + slot] = 1
                     assigned[i] = True
                     break
-                    
+
     # --- Step 3: Assign remaining ships to Panamax locks one by one ---
     for slot in panamax_slots:
         for i in ships_sorted:
-            if not assigned[i] and L[i] <= get_lock_length('Panamax'):
+            if not assigned[i] and L[i] <= get_lock_length("Panamax"):
                 assignment[i * num_time_slots + slot] = 1
                 assigned[i] = True
                 break
 
     return assignment
-
 
 
 def plot(instance_sizes, best_water_costs, baseline_costs, optimal_water):

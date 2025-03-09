@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def generate_lock_types(num_slots):
     lock_types = []
     panamax_slots = int(0.7 * num_slots)
@@ -71,13 +72,14 @@ def print_results(n, T, instance_results):
         print_timetable(instance_results[5], n, T, instance_results[4])
     print("\n" + "-" * 50 + "\n")
 
+
 def qubo_dict_to_matrix(qubo):
     """
     Convert a QUBO dictionary to a matrix.
-    
+
     Parameters:
       qubo (dict): A dictionary where keys are tuples (i, j) and values are coefficients.
-    
+
     Returns:
       np.ndarray: A 2D numpy array representing the QUBO matrix.
     """
@@ -86,15 +88,16 @@ def qubo_dict_to_matrix(qubo):
     for i, j in qubo.keys():
         max_index = max(max_index, i, j)
     n = max_index + 1
-    
+
     # Initialize an n x n matrix of zeros.
     Q = np.zeros((n, n))
-    
+
     # Fill in the matrix using dictionary items.
     for (i, j), value in qubo.items():
         Q[i, j] = value
 
     return Q
+
 
 def bitstring_to_assignment(bitstring, num_ships=2, num_time_slots=2):
     """
@@ -104,7 +107,9 @@ def bitstring_to_assignment(bitstring, num_ships=2, num_time_slots=2):
     """
     expected_length = num_ships * num_time_slots
     if len(bitstring) != expected_length:
-        raise ValueError(f"Expected bitstring of length {expected_length}, got {len(bitstring)}")
+        raise ValueError(
+            f"Expected bitstring of length {expected_length}, got {len(bitstring)}"
+        )
     # Create the dictionary by enumerating the bitstring
     assignment = {i: int(bit) for i, bit in enumerate(bitstring)}
     return assignment

@@ -1,4 +1,3 @@
-
 import itertools
 from utils import get_lock_length, water_cost_for_slot
 from parameters import *
@@ -31,8 +30,10 @@ def build_qubo(B, L, lock_types, dynamic=False):
     Q = {}
 
     # Capacity thresholds (in meters)
-    panamax_capacity = get_lock_length('Panamax')  # ship must be <= 294 for Panamax
-    neo_capacity     = get_lock_length('NeoPanamax')  # for two short ships in NeoPanamax, their sum must be < 366
+    panamax_capacity = get_lock_length("Panamax")  # ship must be <= 294 for Panamax
+    neo_capacity = get_lock_length(
+        "NeoPanamax"
+    )  # for two short ships in NeoPanamax, their sum must be < 366
 
     # QUBO is stored as a dictionary, with keys as tuples (p, q) corresponding to variables.
     Q = {}
@@ -96,10 +97,18 @@ def build_qubo(B, L, lock_types, dynamic=False):
             for t in range(T):
                 idx = i * T + t
                 # If individual ship exceeds the slot's capacity, add infeasibility penalty.
-                incomp = dynamic_penalty_infeasible if L[i] > get_lock_length(lock_types[t]) else 0
+                incomp = (
+                    dynamic_penalty_infeasible
+                    if L[i] > get_lock_length(lock_types[t])
+                    else 0
+                )
                 # Linear contribution: subtract benefit, add water cost, plus incompatibility penalty.
-                Q[(idx, idx)] = Q.get((idx, idx), 0) - B[i] * dynamic_lambda_benefit \
-                                + water_cost_for_slot(lock_types[t], 1) * dynamic_lambda_water + incomp
+                Q[(idx, idx)] = (
+                    Q.get((idx, idx), 0)
+                    - B[i] * dynamic_lambda_benefit
+                    + water_cost_for_slot(lock_types[t], 1) * dynamic_lambda_water
+                    + incomp
+                )
 
         # 2. Constraint: Each ship is scheduled exactly once or 0.
         # Enforce (sum_t x[i,t] - 1)^2 = sum_t x[i,t]^2 - 2 * sum_t x[i,t] + 1,
@@ -132,9 +141,9 @@ def build_qubo(B, L, lock_types, dynamic=False):
                     idx_i = i * T + t
                     idx_j = j * T + t
                     key = (idx_i, idx_j) if idx_i <= idx_j else (idx_j, idx_i)
-                    
-                    q_val = - dynamic_lambda_tandem
-                    
+
+                    q_val = -dynamic_lambda_tandem
+
                     combined_length = L[i] + L[j]
                     if combined_length > capacity:
                         # Infeasible: the combined ship lengths exceed the lock capacity.
@@ -146,7 +155,7 @@ def build_qubo(B, L, lock_types, dynamic=False):
         # For consecutive slots t and t+1 with lock types {"Panamax_A", "Panamax_B"},
         # add a bonus for pairing any ships across these slots.
         for t in range(T - 1):
-            if {lock_types[t], lock_types[t+1]} == {"Panamax_A", "Panamax_B"}:
+            if {lock_types[t], lock_types[t + 1]} == {"Panamax_A", "Panamax_B"}:
                 for i in range(N):
                     for j in range(N):
                         idx_i = i * T + t

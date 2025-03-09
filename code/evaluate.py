@@ -21,7 +21,7 @@ def evaluate_solution(sample, B, L, lock_types):
     tandem_count = 0
     cross_fill_count = 0
     infeasible_reason = []
-    
+
     # 1. Constraint: Each ship is assigned one time.
     for i in range(N):
         assignments = sum(sample[i * T + t] for t in range(T))
