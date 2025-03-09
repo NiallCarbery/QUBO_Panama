@@ -11,13 +11,13 @@ import time
 from data_processing import generate_ship_data
 
 
-def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False):
+def run_instance(num_ships, num_time_slots, NUM_READS=10, optimal=False, dynamic=False):
     ship_data = generate_ship_data(num_ships)
     L = ship_data["Length (m)"].to_numpy()
     B = ship_data["Benefit"].to_numpy()
     lock_types = generate_lock_types(num_time_slots)
 
-    Q = build_qubo(B, L, lock_types)
+    Q = build_qubo(B, L, lock_types, dynamic)
     bqm = dimod.BinaryQuadraticModel.from_qubo(Q)
     sampler = dimod.SimulatedAnnealingSampler()
     start_time = time.time()  # Start timing.
