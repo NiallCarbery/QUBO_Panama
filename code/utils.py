@@ -95,3 +95,23 @@ def qubo_dict_to_matrix(qubo):
         Q[i, j] = value
 
     return Q
+
+def bitstring_to_assignment(bitstring, measurement_results, num_ships=2, num_time_slots=2):
+    """
+    Converts a bitstring into an assignment dictionary.
+    For example, with 2 ships and 2 time slots (4 bits), '1010' becomes:
+    {0: 1, 1: 0, 2: 1, 3: 0}
+    """
+    expected_length = num_ships * num_time_slots
+    if len(bitstring) != expected_length:
+        raise ValueError(f"Expected bitstring of length {expected_length}, got {len(bitstring)}")
+    # Create the dictionary by enumerating the bitstring
+    assignment = {i: int(bit) for i, bit in enumerate(bitstring)}
+    return assignment
+
+# Convert all bitstrings to their corresponding assignment dictionaries
+assignments = {bit: bitstring_to_assignment(bit) for bit in measurement_results}
+
+# Example: Print out each bitstring's assignment and its count
+for bit, count in measurement_results.items():
+    print(f"Bitstring: {bit}, Count: {count}, Assignment: {assignments[bit]}")
