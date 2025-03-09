@@ -16,11 +16,22 @@ from pulser.devices import DigitalAnalogDevice
 from scipy.optimize import minimize, curve_fit
 from scipy.spatial.distance import pdist, squareform
 
+np.random.seed(0)
+
+def evaluate_mapping(new_coords, Q):
+    """Cost function to minimize. Ideally, the pairwise distances are conserved."""
+    new_coords = np.reshape(new_coords, (len(Q), 2))
+    # computing the matrix of the distances between all coordinate pairs
+    new_Q = squareform(
+        DigitalAnalogDevice.interaction_coeff / pdist(new_coords) ** 6
+    )
+    return np.linalg.norm(new_Q - Q)
+
 def evaluate_mapping_constrained(new_coords, Q,
-                                 d_min_allowed=4e-6,   # minimum separation: 4 μm
+                                 d_min_allowed=1,   # minimum separation: 4 μm
                                  r_max=50e-6,          # maximum distance from origin: 50 μm
                                  lambda_neighbors=1e3, # penalty factor for neighbours too close
-                                 lambda_origin=1e3):    # penalty factor for being outside allowed radius
+                                 lambda_origin=1):    # penalty factor for being outside allowed radius
     """
     Evaluates the cost of a given embedding configuration.
     
@@ -77,7 +88,13 @@ def run_embedding_for_qubits(n, rep, embeddings_dir, save_embedding=False):
     lock_types = generate_lock_types(int(np.sqrt(n)))
     qubo = build_qubo(B, L, lock_types)
     Q = qubo_dict_to_matrix(qubo)
-    
+
+    Q = Q + Q.T - np.diag(np.diag(Q))
+    for i in range(len(L)):
+        Q[i,i] = Q[-1,-1]
+
+    Q =  Q*0.05
+
     # Optimization: use a random initial guess (2 coordinates per qubit)
     x0 = np.random.randn(n * 2)
     res = minimize(
