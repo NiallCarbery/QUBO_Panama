@@ -108,10 +108,3 @@ def bitstring_to_assignment(bitstring, measurement_results, num_ships=2, num_tim
     # Create the dictionary by enumerating the bitstring
     assignment = {i: int(bit) for i, bit in enumerate(bitstring)}
     return assignment
-
-# Convert all bitstrings to their corresponding assignment dictionaries
-assignments = {bit: bitstring_to_assignment(bit) for bit in measurement_results}
-
-# Example: Print out each bitstring's assignment and its count
-for bit, count in measurement_results.items():
-    print(f"Bitstring: {bit}, Count: {count}, Assignment: {assignments[bit]}")
