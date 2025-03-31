@@ -99,7 +99,6 @@ def run_simulation(num_ships, num_time_slots):
 
     print("Converting Bitstrings")
     # Convert bitstrings to assignments.
-    # Note: In the original code, len(T) was used, but since T_sim is an integer,
     # we pass T_sim directly. Adjust as needed if your bitstring_to_assignment expects something else.
     assignments = {
         bit: bitstring_to_assignment(bit, len(B), len(lock_types)) for bit in count_dict
